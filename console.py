@@ -113,49 +113,27 @@ class HBNBCommand(cmd.Cmd):
         pass
 
     def do_create(self, args):
-        """Create an object of any class with given parameters"""
+        """ Create an object of any class"""
+        my_list = args.split(' ')
         if not args:
             print("** class name missing **")
             return
-    
-        args_list = args.split()
-        class_name = args_list[0]
-    
-        if class_name not in HBNBCommand.classes:
+        elif my_list[0] not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
-    
-    # Parse parameters to extract key-value pairs
-        params = {}
-        for arg in args_list[1:]:
-            if "=" not in arg:
-                print(f"Skipping invalid parameter: {arg}")
-                continue
-        
-            key, value = arg.split("=")
-        # Remove leading and trailing double quotes from the value
-            value = value.strip('"')
-        
-        # Replace underscores with spaces in key
-            key = key.replace("_", " ")
-        
-        # Parse value based on its type
-            if "." in value:  # Float
-                try:
-                    value = float(value)
-                except ValueError:
-                    print(f"Skipping invalid float value: {value}")
-                    continue
-            elif value.isdigit():  # Integer
-                value = int(value)
-        
-            params[key] = value
-    
-    # Create an instance of the specified class with the parsed parameters
-        new_instance = HBNBCommand.classes[class_name](**params)
-        storage.save()
+        new_instance = HBNBCommand.classes[my_list[0]]()
         print(new_instance.id)
-        storage.save()
+        for params in my_list[1:]:
+            key_value = params.split('=')
+            key = key_value[0]
+            value = key_value[1]
+            table = {
+                34: None,  # Replace " with Nothing
+                95: 32  # Replace _ with space
+            }
+            value = value.translate(table)
+            setattr(new_instance, key, value)
+        new_instance.save()  # Save to storage
 
 
     def help_create(self):
