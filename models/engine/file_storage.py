@@ -63,4 +63,4 @@ class FileStorage:
 
     def close(self):
         """ Deserialize JSON file to objects before leaving """
-        self.reload() 
+        self.reload()
