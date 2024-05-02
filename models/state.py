@@ -1,9 +1,11 @@
 #!/usr/bin/python3
 """ State Module for HBNB project """
+from sqlalchemy.ext.declarative import declarative_base
 from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String
 from os import getenv
 from sqlalchemy.orm import relationship
+from models.city import City
 
 
 class State(BaseModel, Base):
@@ -14,6 +16,7 @@ class State(BaseModel, Base):
         name = Column(String(128), nullable=False)
         cities = relationship('City', cascade='all, delete', backref='state')
     else:
+        name = ""
         ''' File Storage relationship '''
         @property
         def cities(self):
@@ -22,7 +25,6 @@ class State(BaseModel, Base):
             with state_id equals to the current State.id
             '''
             from models import storage
-            from models.city import City
 
             city_list = []
             city_dict = storage.all(City)
