@@ -12,15 +12,16 @@ def do_pack():
     Compresses the content of web_static folder into a .tgz archive
     """
     try:
-        now = datetime.now()
+        now = datetime.utcnow()
         file_name = "versions/web_static_{}{}{}{}{}{}.tgz".format(
             now.year,
-            str(now.month).zfill(2),
-            str(now.day).zfill(2),
-            str(now.hour).zfill(2),
-            str(now.minute).zfill(2),
-            str(now.second).zfill(2)
+            now.month,
+            now.day,
+            now.hour,
+            now.minute,
+            now.second
         )
+        print("file name before creation" + file_name)
         local("mkdir -p versions")
         local("tar -cvzf {} web_static".format(file_name))
         return file_name
