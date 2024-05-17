@@ -8,7 +8,6 @@ from datetime import datetime
 import os
 
 env.hosts = ['54.175.87.70', '3.84.255.47']
-env.user = 'ubuntu'
 
 
 def do_pack():
@@ -17,7 +16,7 @@ def do_pack():
     """
     dt = datetime.now().strftime("%Y%m%d%H%M%S")
     try:
-        local.("mkdir -p versions")
+        local("mkdir -p versions")
         archive_path = "versions/web_static_{}.tgz".format(dt)
         local("tar -cvzf {} web_static".format(archive_path))
         return archive_path
