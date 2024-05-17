@@ -3,14 +3,11 @@
 Fabric script that deploys an archive to your web servers
 """
 
-from fabric.api import env
+from fabric.api import env, local, put, run
 from os.path import exists
-from fabric.operations import put
 from datetime import datetime
-from fabric.api import local
 
 env.hosts = ['54.175.87.70', '3.84.255.47']
-env.user = 'ubuntu'
 
 
 def do_pack():
@@ -83,4 +80,3 @@ def deploy():
     if archive_path is None:
         return False
     return do_deploy(archive_path)
-
