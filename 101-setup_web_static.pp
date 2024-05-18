@@ -1,44 +1,47 @@
-# Puppet manifest to set up web servers for the deployment of web_static
+# Puppet manifest to set up web server for web_static deployment
 
-# Step 1: Install Nginx
+# Install Nginx package
 package { 'nginx':
   ensure => installed,
 }
 
-# Step 2: Create necessary directories if they don't exist
+# Create necessary directories
 file { ['/data/web_static/releases/test', '/data/web_static/shared']:
   ensure => directory,
 }
 
-# Step 3: Create a fake HTML file
+# Create a fake HTML file
 file { '/data/web_static/releases/test/index.html':
   ensure  => file,
-  content => '<html>
+  content => "<html>
   <head>
   </head>
   <body>
     Holberton School
   </body>
-</html>',
+</html>",
 }
 
-# Step 4: Create or recreate the symbolic link
+# Create or recreate the symbolic link
 file { '/data/web_static/current':
   ensure => link,
-  target => '/data/web_static/releases/test/',
+  target => '/data/web_static/releases/test',
+  force  => true,
 }
 
-# Step 5: Set ownership of the /data/ folder to ubuntu user and group recursively
-file { '/data/':
+# Set ownership of /data/ folder recursively
+file { '/data':
+  ensure  => directory,
   owner   => 'ubuntu',
   group   => 'ubuntu',
   recurse => true,
 }
 
-# Step 6: Update Nginx configuration
+# Update Nginx configuration
 file { '/etc/nginx/sites-available/default':
   ensure  => file,
-  content => "server {
+  content => "
+server {
     listen 80 default_server;
     listen [::]:80 default_server;
     root   /var/www/html;
@@ -59,13 +62,13 @@ file { '/etc/nginx/sites-available/default':
       internal;
     }
     add_header X-Served-By $HOSTNAME;
-}",
+}
+",
 }
 
-# Step 7: Restart Nginx
+# Restart Nginx service
 service { 'nginx':
-  ensure    => 'running',
+  ensure    => running,
   enable    => true,
   subscribe => File['/etc/nginx/sites-available/default'],
 }
-
